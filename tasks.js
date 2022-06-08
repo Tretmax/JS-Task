@@ -77,26 +77,26 @@ console.log(
         country: "Italy",
     })
 ); // "Barcelona FC vs Inter Milan game score is 2:0. Fans of Barcelona FC are already started celebrating on the streets of the Milan, Italy."
-  console.log(
+console.log(
     postBuilder(template, {
-      teamAGameScore: 0,
-      teamBGameScore: 3,
-      teamA: "Barcelona FC",
-      teamB: "Inter Milan",
-      city: "Milan",
-      country: "Italy",
+        teamAGameScore: 0,
+        teamBGameScore: 3,
+        teamA: "Barcelona FC",
+        teamB: "Inter Milan",
+        city: "Milan",
+        country: "Italy",
     })
-  ); // "Barcelona FC vs Inter Milan game score is 0:3. Fans of Inter Milan are already started celebrating on the streets of the Milan, Italy."
-  console.log(
+); // "Barcelona FC vs Inter Milan game score is 0:3. Fans of Inter Milan are already started celebrating on the streets of the Milan, Italy."
+console.log(
     postBuilder(template, {
-      teamAGameScore: 0,
-      teamBGameScore: 0,
-      teamA: "Barcelona FC",
-      teamB: "Inter Milan",
-      city: "Milan",
-      country: "Italy",
+        teamAGameScore: 0,
+        teamBGameScore: 0,
+        teamA: "Barcelona FC",
+        teamB: "Inter Milan",
+        city: "Milan",
+        country: "Italy",
     })
-  ); // "Barcelona FC vs Inter Milan game score is 0:0. Fans of both teams are already started celebrating on the streets of the Milan, Italy."
+); // "Barcelona FC vs Inter Milan game score is 0:0. Fans of both teams are already started celebrating on the streets of the Milan, Italy."
 
 function postBuilder(text, game) {
     let arr = text.split('%')
@@ -123,3 +123,71 @@ function postBuilder(text, game) {
     return result.join('')
 
 }
+
+
+// Sorting
+
+const students = [
+    { name: "Alex", age: 27 },
+    { name: "Deny", age: 25 },
+    { name: "Max", age: 20 },
+];
+const teachers = [
+    { name: "Tommy", age: 33, experience: 10, skillsId: 1 },
+    { name: "Lora", age: 44, experience: 12, skillsId: 2 },
+    { name: "Rafat", age: 35, experience: 3, skillsId: 3 },
+];
+
+console.log(sortByAge(students)); // order: Max, Deny, Alex
+console.log(sortByAge(teachers)); // order: Tommy, Rafat, Lora
+
+function sortByAge(arr) {
+    return arr.sort((a, b) => (a.age - b.age))
+}
+
+console.log(sortBy(students, "age")); // order: Max, Deny, Alex
+console.log(sortBy(teachers, "experience")); // order: Rafat, Tommy, Lora
+
+function sortBy(arr, key) {
+
+    return arr.sort((a, b) => (a[key] - b[key]))
+}
+
+
+const skillsInfo = [
+    {
+        id: 1,
+        items: ["math", "english"],
+    },
+    {
+        id: 2,
+        items: ["chemistry", "physics", "math", "english"],
+    },
+    {
+        id: 3,
+        items: ["chemistry"],
+    },
+];
+
+console.log(sortBySkills(teachers, skillsInfo)); // order: Lora, Tommy, Rafat
+
+
+function sortBySkills(teachers, skills) {
+
+    let hashTable = {};
+
+    skills.forEach((el) => {
+        hashTable[el.id] = el.items.length
+           })
+
+    return teachers.sort((a, b) => hashTable[b.skillsId] - hashTable[a.skillsId])
+     
+}
+
+
+
+
+
+
+
+
