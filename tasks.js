@@ -30,6 +30,9 @@ console.log(countSymbols("Antony", userSymbol, registr))
 console.log(countSymbols("Barack ObamaAAA", userSymbol))
 console.log(countSymbols("Barack ObamaAAA", userSymbol, registr))
 
+
+
+
 // Anti Spy
 let text = "If you agree with that, just let me know to obama@mail.us or newpower@gmail.com and I'll reach out as soon as possible."
 
@@ -60,6 +63,11 @@ function antiSpy(text, antiEmail) {
 console.log(antiSpy(text)) // "If you agree with that, just let me know to HIDDEN_DATA or HIDDEN_DATA and I'll reach out as soon as possible."
 console.log(antiSpy(text, "MY_MAIL")) // "If you agree with that, just let me know to MY_MAIL or MY_MAIL and I'll reach out as soon as possible."
 console.log(antiSpy(text, "XXXX")) // "If you agree with that, just let me know to XXXX or XXXX and I'll reach out as soon as possible."
+
+
+
+
+
 
 // Level 2
 
@@ -125,6 +133,10 @@ function postBuilder(text, game) {
 }
 
 
+
+
+
+
 // Sorting
 
 const students = [
@@ -178,16 +190,64 @@ function sortBySkills(teachers, skills) {
 
     skills.forEach((el) => {
         hashTable[el.id] = el.items.length
-           })
+    })
 
     return teachers.sort((a, b) => hashTable[b.skillsId] - hashTable[a.skillsId])
-     
+
 }
 
 
 
 
 
+// God-mode
 
+
+const home = new World();
+home.changePlanetName("Earth");
+console.log(home.planetName); // Earth
+console.log(home.species); // []
+console.log(home.creatures); // []
+console.log(home.countPopulation()); // {}
+home.create({
+    name: "human",
+    specie: "homo sapiens",
+});
+home.create({
+    name: "penguin",
+    specie: "bird",
+});
+home.create({
+    name: "swan",
+    specie: "bird",
+});
+console.log(home.species); // ["homo sapiens", "bird"]
+console.log(home.creatures); // [{ name: "human", specie: "homo sapiens" }, { name: "penguin", ...
+console.log(home.countPopulation()); // { "homo sapiens": 1, bird: 2 }
+
+function World() {
+    this.planetName = '',
+        this.species = [],
+        this.creatures = [],
+        this.changePlanetName = function (newName) {
+            this.planetName = newName
+        },
+        this.create = function (data) {
+            if (!this.species.includes(data.specie)) {
+                this.species.push(data.specie)
+            }
+            this.creatures.push(data)
+        }
+    this.countPopulation = function () {
+        let hashTable = {}
+        this.creatures.forEach((item) => {
+
+            console.log(item)
+            hashTable[item.specie] = (hashTable[item.specie] || 0) + 1
+        })
+        return hashTable
+
+    }
+}
 
 
