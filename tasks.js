@@ -242,7 +242,7 @@ function World() {
         let hashTable = {}
         this.creatures.forEach((item) => {
 
-            console.log(item)
+            // console.log(item)
             hashTable[item.specie] = (hashTable[item.specie] || 0) + 1
         })
         return hashTable
@@ -251,3 +251,119 @@ function World() {
 }
 
 
+
+
+
+// Agregator
+
+const users = [
+    {
+        id: '8o71g807b09hvd09h1',
+        firstName: 'John',
+        lastName: 'Smith'
+    },
+    {
+        id: '9we8rn4e98161684s9',
+        firstName: 'Marcus',
+        lastName: 'Davis'
+    },
+    {
+        id: '78y78t4ygd984y5c16',
+        firstName: 'Anna',
+        lastName: 'Rogers'
+    }
+];
+
+const banks = [
+    {
+        id: '8s7b4s87d4s7e7ee',
+        name: 'PrivatBank',
+        country: 'Ukraine'
+    },
+    {
+        id: 'df87ndre78r7ee13',
+        name: 'UniversalBank',
+        country: 'Ukraine'
+    },
+    {
+        id: '28741hfhdfddsaaa',
+        name: 'Revolut',
+        country: 'UK'
+    },
+];
+
+const currencies = [
+    {
+        id: '127122v2',
+        short: 'UAH',
+        full: 'Ukrainian Hryvnya'
+    },
+    {
+        id: '914184g4',
+        short: 'USD',
+        full: 'United States Dollar'
+    },
+    {
+        id: '1981vgd4',
+        short: 'EUR',
+        full: 'Euro'
+    },
+];
+
+const payments = [
+    {
+        id: 1,
+        sender: {
+            userId: '8o71g807b09hvd09h1',
+            bankId: 'df87ndre78r7ee13',
+            currencyId: '1981vgd4'
+        },
+        receiver: {
+            userId: '9we8rn4e98161684s9',
+            bankId: '8s7b4s87d4s7e7ee',
+            currencyId: '127122v2'
+        }
+    },
+    {
+        id: 2,
+        sender: {
+            userId: '78y78t4ygd984y5c16',
+            bankId: '28741hfhdfddsaaa',
+            currencyId: '127122v2'
+        },
+        receiver: {
+            userId: '9we8rn4e98161684s9',
+            bankId: '28741hfhdfddsaaa',
+            currencyId: '127122v2'
+        }
+    },
+]
+
+
+
+function aggregate(payments, users, banks, currencies) {
+    let result =[]
+
+    let pay =  payments.map((item)=>{
+let userSenderData=users.find(id => id.id ===item.sender.userId);
+let userReceiverData=users.find(id => id.id ===item.receiver.userId);
+let bankSenderData=banks.find(id => id.id ===item.sender.bankId);
+let bankReceiverData=banks.find(id => id.id ===item.receiver.bankId);
+let currencySenderData=currencies.find(id => id.id ===item.sender.currencyId);
+let currencyReceiverData=currencies.find(id => id.id ===item.receiver.currencyId);
+
+item.sender['userData'] = userSenderData;
+item.receiver['userData'] = userReceiverData;
+item.sender['bankData'] = bankSenderData;
+item.receiver['bankData'] = bankReceiverData;
+item.sender['currencyData'] = currencySenderData;
+item.receiver['currencyData'] = currencyReceiverData;
+
+return item
+
+    })
+     result.push(pay)
+    return result
+}
+
+console.log(aggregate(payments, users, banks, currencies))
