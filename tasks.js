@@ -342,28 +342,155 @@ const payments = [
 
 
 function aggregate(payments, users, banks, currencies) {
-    let result =[]
+    let result = []
 
-    let pay =  payments.map((item)=>{
-let userSenderData=users.find(id => id.id ===item.sender.userId);
-let userReceiverData=users.find(id => id.id ===item.receiver.userId);
-let bankSenderData=banks.find(id => id.id ===item.sender.bankId);
-let bankReceiverData=banks.find(id => id.id ===item.receiver.bankId);
-let currencySenderData=currencies.find(id => id.id ===item.sender.currencyId);
-let currencyReceiverData=currencies.find(id => id.id ===item.receiver.currencyId);
+    let pay = payments.map((item) => {
+        let userSenderData = users.find(id => id.id === item.sender.userId);
+        let userReceiverData = users.find(id => id.id === item.receiver.userId);
+        let bankSenderData = banks.find(id => id.id === item.sender.bankId);
+        let bankReceiverData = banks.find(id => id.id === item.receiver.bankId);
+        let currencySenderData = currencies.find(id => id.id === item.sender.currencyId);
+        let currencyReceiverData = currencies.find(id => id.id === item.receiver.currencyId);
 
-item.sender['userData'] = userSenderData;
-item.receiver['userData'] = userReceiverData;
-item.sender['bankData'] = bankSenderData;
-item.receiver['bankData'] = bankReceiverData;
-item.sender['currencyData'] = currencySenderData;
-item.receiver['currencyData'] = currencyReceiverData;
+        item.sender['userData'] = userSenderData;
+        item.receiver['userData'] = userReceiverData;
+        item.sender['bankData'] = bankSenderData;
+        item.receiver['bankData'] = bankReceiverData;
+        item.sender['currencyData'] = currencySenderData;
+        item.receiver['currencyData'] = currencyReceiverData;
 
-return item
+        return item
 
     })
-     result.push(pay)
+    result.push(pay)
     return result
 }
 
 console.log(aggregate(payments, users, banks, currencies))
+
+
+
+
+
+
+
+// Level 3
+// Pizzeria
+
+
+
+
+
+
+
+
+
+function pizzaCooking(pizza, timeCook) {
+    let start = Date.now()
+    return new Promise(function (resolve, reject) {
+        setTimeout(() => resolve(`${pizza} is done in ${Math.floor((Date.now() - start) / 100) / 10}s`), timeCook)
+
+    }
+    )
+}
+
+
+// pizzaCooking("margarita", 5400).then((message) => console.log(message)); // (should resolve in 5.4s) margarita is done
+// pizzaCooking("diabola", 3200).then((message) => console.log(message)); // (should resolve in 3.2s) diabola is done
+
+
+// ///////////////////////////////////////////////
+
+// const orders = [
+//     { name: "margarita", ovenTime: 5400 },
+//     { name: "diabola", ovenTime: 3200 },
+//     { name: "peperoni", ovenTime: 2500 },
+// ];
+
+
+// idealKitchen(orders).then((messages) => console.log(messages)); // ['margarita is done', 'diabola is done', 'peperoni is done']
+
+function idealKitchen(ordersList) {
+    let arrPromises = ordersList.map((order) => {
+        let { name, ovenTime } = order
+        return pizzaCooking(name, ovenTime)
+    })
+    return Promise.all(arrPromises)
+}
+
+/////////////////////////////////////////////////////
+
+const orders = [
+    { name: "margarita", ovenTime: 5400 },
+    { name: "bbq", ovenTime: 1800 },
+    { name: "bbq", ovenTime: 1800 },
+    { name: "margarita", ovenTime: 5400 },
+    { name: "diabola", ovenTime: 3200 },
+    { name: "peperoni", ovenTime: 2500 },
+    { name: "margarita", ovenTime: 5400 },
+    { name: "hawaiian", ovenTime: 2000 },
+    { name: "bbq", ovenTime: 1800 },
+    { name: "seafood", ovenTime: 2100 },
+    { name: "peperoni", ovenTime: 2500 },
+];
+
+// realKitchen(orders, 4).then((messages) => console.log(messages)); // ['margarita is done', ...]
+
+function realKitchen(ordersList, oven) {
+    //   ordersList.sort( (a, b) => a.ovenTime - b.ovenTime ) ////////////////////// realKithen to cheifKitchen
+
+    let ordersForOven = {};
+
+    for (let noOven = oven; noOven > 0; noOven--) {
+        ordersForOven[noOven] = []
+    }
+
+    ordersList.forEach((item, index) => {
+        if ((index + 1) % oven === 0) {
+            ordersForOven[oven].push(item)
+
+        } else {
+            ordersForOven[(index + 1) - (Math.floor((index + 1) / oven)) * oven].push(item)
+        }
+
+    })
+
+
+
+    // console.log(ordersForOven)
+
+    let arrPromises = []
+
+    for (let noOven in ordersForOven) {
+        console.log(noOven)
+
+        //
+        ordersForOven[noOven].map(async(order) => {
+            let { name, ovenTime } = order
+            let result = await pizzaCooking(name, ovenTime)
+
+            arrPromises.push(result)
+
+        })
+        // console.log(arrPromises)
+        // return arrPromises
+
+    }
+
+    console.log(arrPromises)
+    // return Promise.all(arrPromises)
+    return (arrPromises)
+}
+
+
+
+// console.time('realKitchen');
+// realKitchen(orders, 2).then((messages) => {
+//     console.log(messages); // ['margarita is done', ...]
+//     console.timeEnd('realKitchen')
+// })
+
+console.time('realKitchen');
+console.log(realKitchen(orders, 2), console.timeEnd('realKitchen'))
+  
+
