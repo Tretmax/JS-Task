@@ -457,40 +457,44 @@ async function realKitchen(ordersList, oven) {
 
     let arrPromises = []
 
+    let n = 0
+    async function ovenCook(ordersForOven, n) {
+
+        let pizza = ordersForOven[n].name;
+        let time = ordersForOven[n].ovenTime;
+
+        if (n === (ordersForOven.length - 1)) {
+            let result = await pizzaCooking(pizza, time)
+            return arrPromises.push(result)
+
+        } else {
+            let result = await pizzaCooking(pizza, time)
+
+            await ovenCook(ordersForOven, n + 1)
+            return arrPromises.push(result)
+
+        }
+
+    }
     for (let noOven in ordersForOven) {
 
-        let n = 0
-        async function ovenCook(ordersForOven, n) {
+        return  ovenCook(ordersForOven[noOven], n)
 
-            let pizza = ordersForOven[n].name;
-            let time = ordersForOven[n].ovenTime;
+        // return new Promise(function (resolve, reject) {
+        //     resolve(ovenCook(ordersForOven[noOven], n))
 
-            if (n === (ordersForOven.length - 1)) {
-                let result = await pizzaCooking(pizza, time)
-                return arrPromises.push(result)
-
-            } else {
-                let result = await pizzaCooking(pizza, time)
-
-                ovenCook(ordersForOven, n + 1)
-                return arrPromises.push(result)
-
-            }
-          
-        }
-        ovenCook(ordersForOven[noOven], n)
+        // })
         // console.log(arrPromises)
     }
     // console.log(arrPromises)
 
-
-    return Promise.all(arrPromises)
+    return await Promise.all(arrPromises)
 }
 
 
 
 console.time('realKitchen');
-realKitchen(orders, 5).then((messages) => {
+realKitchen(orders, 6).then((messages) => {
     console.log(messages); // ['margarita is done', ...]
     console.timeEnd('realKitchen')
 })
