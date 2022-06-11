@@ -436,7 +436,7 @@ const orders = [
 
 // realKitchen(orders, 4).then((messages) => console.log(messages)); // ['margarita is done', ...]
 
-function realKitchen(ordersList, oven) {
+async function realKitchen(ordersList, oven) {
     //   ordersList.sort( (a, b) => a.ovenTime - b.ovenTime ) ////////////////////// realKithen to cheifKitchen
 
     let ordersForOven = {};
@@ -455,42 +455,47 @@ function realKitchen(ordersList, oven) {
 
     })
 
-
-
-    // console.log(ordersForOven)
-
     let arrPromises = []
 
     for (let noOven in ordersForOven) {
-        console.log(noOven)
 
-        //
-        ordersForOven[noOven].map(async(order) => {
-            let { name, ovenTime } = order
-            let result = await pizzaCooking(name, ovenTime)
+        let n = 0
+        async function ovenCook(ordersForOven, n) {
 
-            arrPromises.push(result)
+            let pizza = ordersForOven[n].name;
+            let time = ordersForOven[n].ovenTime;
 
-        })
+            if (n === (ordersForOven.length - 1)) {
+                let result = await pizzaCooking(pizza, time)
+                return arrPromises.push(result)
+
+            } else {
+                let result = await pizzaCooking(pizza, time)
+
+                ovenCook(ordersForOven, n + 1)
+                return arrPromises.push(result)
+
+            }
+          
+        }
+        ovenCook(ordersForOven[noOven], n)
         // console.log(arrPromises)
-        // return arrPromises
-
     }
+    // console.log(arrPromises)
 
-    console.log(arrPromises)
-    // return Promise.all(arrPromises)
-    return (arrPromises)
+
+    return Promise.all(arrPromises)
 }
 
 
 
-// console.time('realKitchen');
-// realKitchen(orders, 2).then((messages) => {
-//     console.log(messages); // ['margarita is done', ...]
-//     console.timeEnd('realKitchen')
-// })
-
 console.time('realKitchen');
-console.log(realKitchen(orders, 2), console.timeEnd('realKitchen'))
-  
+realKitchen(orders, 5).then((messages) => {
+    console.log(messages); // ['margarita is done', ...]
+    console.timeEnd('realKitchen')
+})
+
+// console.time('realKitchen');
+// console.log(realKitchen(orders, 2))
+
 
