@@ -395,20 +395,20 @@ function pizzaCooking(pizza, timeCook) {
 }
 
 
-// pizzaCooking("margarita", 5400).then((message) => console.log(message)); // (should resolve in 5.4s) margarita is done
-// pizzaCooking("diabola", 3200).then((message) => console.log(message)); // (should resolve in 3.2s) diabola is done
+pizzaCooking("margarita", 5400).then((message) => console.log(message)); // (should resolve in 5.4s) margarita is done
+pizzaCooking("diabola", 3200).then((message) => console.log(message)); // (should resolve in 3.2s) diabola is done
 
 
 // ///////////////////////////////////////////////
 
-// const orders = [
-//     { name: "margarita", ovenTime: 5400 },
-//     { name: "diabola", ovenTime: 3200 },
-//     { name: "peperoni", ovenTime: 2500 },
-// ];
+const orders1 = [
+    { name: "margarita", ovenTime: 5400 },
+    { name: "diabola", ovenTime: 3200 },
+    { name: "peperoni", ovenTime: 2500 },
+];
 
 
-// idealKitchen(orders).then((messages) => console.log(messages)); // ['margarita is done', 'diabola is done', 'peperoni is done']
+idealKitchen(orders1).then((messages) => console.log(messages)); // ['margarita is done', 'diabola is done', 'peperoni is done']
 
 function idealKitchen(ordersList) {
     let arrPromises = ordersList.map((order) => {
@@ -420,7 +420,7 @@ function idealKitchen(ordersList) {
 
 /////////////////////////////////////////////////////
 
-const orders = [
+const orders2 = [
     { name: "margarita", ovenTime: 5400 },
     { name: "bbq", ovenTime: 1800 },
     { name: "bbq", ovenTime: 1800 },
@@ -434,10 +434,10 @@ const orders = [
     { name: "peperoni", ovenTime: 2500 },
 ];
 
-// realKitchen(orders, 4).then((messages) => console.log(messages)); // ['margarita is done', ...]
+
 
 async function realKitchen(ordersList, oven) {
-    //   ordersList.sort( (a, b) => a.ovenTime - b.ovenTime ) ////////////////////// realKithen to cheifKitchen
+      ordersList.sort( (a, b) => a.ovenTime - b.ovenTime ) ////////////////////// realKithen to cheifKitchen
 
     let ordersForOven = {};
 
@@ -463,43 +463,36 @@ async function realKitchen(ordersList, oven) {
         let pizza = ordersForOven[n].name;
         let time = ordersForOven[n].ovenTime;
 
+       
         if (n === (ordersForOven.length - 1)) {
-            let result = await pizzaCooking(pizza, time)
-            return arrPromises.push(result)
+
+            return  await pizzaCooking(pizza, time)
 
         } else {
-            let result = await pizzaCooking(pizza, time)
 
-            await ovenCook(ordersForOven, n + 1)
-            return arrPromises.push(result)
+            return `${await pizzaCooking(pizza, time)} + ${await ovenCook(ordersForOven, n + 1)}`
 
         }
-
     }
+
     for (let noOven in ordersForOven) {
 
-        return  ovenCook(ordersForOven[noOven], n)
+        new Promise(function (resolve, reject) {
+            resolve(arrPromises.push(ovenCook(ordersForOven[noOven], n)))
 
-        // return new Promise(function (resolve, reject) {
-        //     resolve(ovenCook(ordersForOven[noOven], n))
-
-        // })
-        // console.log(arrPromises)
+        })
+  
     }
-    // console.log(arrPromises)
-
-    return await Promise.all(arrPromises)
+      return await Promise.all(arrPromises)
 }
 
 
 
 console.time('realKitchen');
-realKitchen(orders, 6).then((messages) => {
+realKitchen(orders2, 2).then((messages) => {
     console.log(messages); // ['margarita is done', ...]
     console.timeEnd('realKitchen')
 })
 
-// console.time('realKitchen');
-// console.log(realKitchen(orders, 2))
 
 
